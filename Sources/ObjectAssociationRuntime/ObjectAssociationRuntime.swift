@@ -19,7 +19,7 @@ public func swift_setAssociatedObject(
     _ object: AnyObject,
     _ key: UnsafeRawPointer,
     _ value: AnyObject?,
-    _ policy: Int
+    _ policy: UInt
 )
 
 @_silgen_name("swift_getAssociatedObject")

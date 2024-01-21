@@ -37,12 +37,13 @@ public func swift_associated_object_autorelease(
 
 private func swift_reference_handle(
     _ ptr: UnsafeRawPointer?,
+    source: String = #function,
     handler: (UnsafeRawPointer) -> Void
 ) {
     guard let ptr else { return }
 
 #if false
-    print(#function)
+    print(source)
     let obj = Unmanaged<AnyObject>.fromOpaque(ptr).takeUnretainedValue()
     let old = CFGetRetainCount(obj)
     defer {
