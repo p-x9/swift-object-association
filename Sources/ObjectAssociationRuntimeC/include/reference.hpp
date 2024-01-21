@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+typedef unsigned long uintptr_t;
+
 extern "C" {
     void swift_initAssociations();
     void swift_associated_object_retain(void *object);
