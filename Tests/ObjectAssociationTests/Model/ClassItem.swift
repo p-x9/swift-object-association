@@ -20,17 +20,16 @@ class ClassItem {
 
     var valueType: String? {
         get {
-            let val = getAssociatedObject(
+            getAssociatedObject(
                 self,
                 &ClassItem.Keys.valueType
-            ) as? NSValue
-            return val?.nonretainedObjectValue as? String
+            ) as? String
         }
         set {
             setAssociatedObject(
                 self,
                 &ClassItem.Keys.valueType,
-                NSValue.init(nonretainedObject: newValue)
+                newValue
             )
         }
     }
