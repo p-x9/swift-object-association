@@ -7,10 +7,10 @@ However, this library can also be used on Linux platforms and other platforms th
 
 <!-- # Badges -->
 
-[![Github issues](https://img.shields.io/github/issues/p-x9/ObjectAssociation)](https://github.com/p-x9/ObjectAssociation/issues)
-[![Github forks](https://img.shields.io/github/forks/p-x9/ObjectAssociation)](https://github.com/p-x9/ObjectAssociation/network/members)
-[![Github stars](https://img.shields.io/github/stars/p-x9/ObjectAssociation)](https://github.com/p-x9/ObjectAssociation/stargazers)
-[![Github top language](https://img.shields.io/github/languages/top/p-x9/ObjectAssociation)](https://github.com/p-x9/ObjectAssociation/)
+[![Github issues](https://img.shields.io/github/issues/p-x9/swift-object-association)](https://github.com/p-x9/swift-object-association/issues)
+[![Github forks](https://img.shields.io/github/forks/p-x9/swift-object-association)](https://github.com/p-x9/swift-object-association/network/members)
+[![Github stars](https://img.shields.io/github/stars/p-x9/swift-object-association)](https://github.com/p-x9/swift-object-association/stargazers)
+[![Github top language](https://img.shields.io/github/languages/top/p-x9/swift-object-association)](https://github.com/p-x9/swift-object-association/)
 
 ## Usage
 
