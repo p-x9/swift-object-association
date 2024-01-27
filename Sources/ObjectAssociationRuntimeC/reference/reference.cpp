@@ -1,9 +1,9 @@
 //
 //  reference.cpp
-//  
+//
 //
 //  Created by p-x9 on 2024/01/21.
-//  
+//
 //
 
 #include "../include/reference.hpp"
@@ -16,7 +16,7 @@
 enum {
     SWIFT_ASSOCIATION_SETTER_ASSIGN      = 0,
     SWIFT_ASSOCIATION_SETTER_RETAIN      = 1,
-//    SWIFT_ASSOCIATION_SETTER_COPY        = 3,
+    //    SWIFT_ASSOCIATION_SETTER_COPY        = 3,
     SWIFT_ASSOCIATION_GETTER_READ        = (0 << 8),
     SWIFT_ASSOCIATION_GETTER_RETAIN      = (1 << 8),
     SWIFT_ASSOCIATION_GETTER_AUTORELEASE = (2 << 8),
@@ -45,38 +45,44 @@ public:
     inline uintptr_t policy() const { return _policy; }
     inline void* value() const { return _value; }
 
-        inline void acquireValue() {
-            if (_value) {
-                switch (_policy & 0xFF) {
+    inline void acquireValue() {
+        if (_value) {
+            switch (_policy & 0xFF) {
                 case SWIFT_ASSOCIATION_SETTER_RETAIN:
                     swift_associated_object_retain(_value);
                     break;
 //                case SWIFT_ASSOCIATION_SETTER_COPY:
 //                    _value = ((id(*)(id, SEL))objc_msgSend)(_value, @selector(copy));
 //                    break;
-                }
             }
         }
+    }
 
-        inline void releaseHeldValue() {
-            if (_value && (_policy & SWIFT_ASSOCIATION_SETTER_RETAIN)) {
-                swift_associated_object_release(_value);
-            }
+    inline void releaseHeldValue() {
+        if (_value && (_policy & SWIFT_ASSOCIATION_SETTER_RETAIN)) {
+            swift_associated_object_release(_value);
         }
-    
-        inline void retainReturnedValue() {
-            if (_value && (_policy & SWIFT_ASSOCIATION_GETTER_RETAIN)) {
-                swift_associated_object_retain(_value);
-            }
+    }
+
+    inline void retainHeldValue() {
+        if (_value && (_policy & SWIFT_ASSOCIATION_SETTER_RETAIN)) {
+            swift_associated_object_retain(_value);
         }
-    
-        inline void* autoreleaseReturnedValue() {
-            if (slowpath(_value && (_policy & SWIFT_ASSOCIATION_GETTER_AUTORELEASE))) {
-                swift_associated_object_autorelease(_value);
-                return _value;
-            }
+    }
+
+    inline void retainReturnedValue() {
+        if (_value && (_policy & SWIFT_ASSOCIATION_GETTER_RETAIN)) {
+            swift_associated_object_retain(_value);
+        }
+    }
+
+    inline void* autoreleaseReturnedValue() {
+        if (slowpath(_value && (_policy & SWIFT_ASSOCIATION_GETTER_AUTORELEASE))) {
+            swift_associated_object_autorelease(_value);
             return _value;
         }
+        return _value;
+    }
 };
 
 typedef uintptr_t disguised_ptr_t;
@@ -127,6 +133,8 @@ _object_get_associative_reference(void *object, const void *key)
             ObjectAssociationMap::iterator j = refs.find(key);
             if (j != refs.end()) {
                 association = j->second;
+                /* Retain for map */
+                association.retainHeldValue();
                 association.retainReturnedValue();
             }
         }
@@ -152,7 +160,7 @@ _object_set_associative_reference(void *object, const void *key, void *value, ui
     // retain the new value (if any) outside the lock.
     association.acquireValue();
 
-    /* The original implementation also retains on the map */
+    /* [1] The original implementation also retains on the map */
     association.acquireValue();
 
     bool isFirstAssociation = false;
@@ -171,6 +179,8 @@ _object_set_associative_reference(void *object, const void *key, void *value, ui
             auto &refs = refs_result.first->second;
             auto result = refs.try_emplace(key, std::move(association));
             if (!result.second) {
+                /* [2] Release the amount retained in [1]. */
+                result.first->second.releaseHeldValue();
                 association.swap(result.first->second);
             }
         } else {
