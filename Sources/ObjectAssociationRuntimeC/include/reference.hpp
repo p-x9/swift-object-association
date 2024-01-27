@@ -14,12 +14,16 @@
 
 typedef unsigned long uintptr_t;
 
+#ifdef __cplusplus
 extern "C" {
+#endif
     void swift_initAssociations();
     void swift_associated_object_retain(void *object);
     void swift_associated_object_release(void *object);
     void swift_associated_object_autorelease(void *object);
+#ifdef __cplusplus
 }
+#endif
 
 #ifdef __cplusplus
 extern "C"

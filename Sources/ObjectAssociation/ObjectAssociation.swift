@@ -1,4 +1,6 @@
+#if canImport(ObjectAssociationRuntime)
 import ObjectAssociationRuntime
+#endif
 
 
 public func getAssociatedObject(
