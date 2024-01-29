@@ -15,14 +15,15 @@ public func getAssociatedObject(
 public func setAssociatedObject(
     _ object: AnyObject,
     _ key: UnsafeRawPointer,
-    _ value: Any?
+    _ value: Any?,
+    _ policy: swift_AssociationPolicy = .SWIFT_ASSOCIATION_RETAIN
 ) {
     _ = _initAssociations
     swift_setAssociatedObject(
         object,
         key,
         Ref(value),
-        Policy.SWIFT_ASSOCIATION_RETAIN_NONATOMIC.rawValue
+        policy.rawValue
     )
 }
 
