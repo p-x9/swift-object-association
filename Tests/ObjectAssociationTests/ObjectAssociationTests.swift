@@ -21,6 +21,28 @@ final class ObjectAssociationTests: XCTestCase {
             classItem.valueType,
             "hello"
         )
+        XCTAssertEqual(
+            classItem.valueType,
+            "hello"
+        )
+        XCTAssertEqual(
+            classItem.valueType,
+            "hello"
+        )
+        XCTAssertEqual(
+            classItem.valueType,
+            "hello"
+        )
+        XCTAssertEqual(
+            classItem.valueType,
+            "hello"
+        )
+
+        classItem.valueType = "modified"
+        XCTAssertEqual(
+            classItem.valueType,
+            "modified"
+        )
 
         classItem.valueType = nil
         XCTAssertNil(
@@ -39,12 +61,33 @@ final class ObjectAssociationTests: XCTestCase {
             classItem.referenceType?.id,
             id1
         )
+        XCTAssertEqual(
+            classItem.referenceType?.id,
+            id1
+        )
+        XCTAssertEqual(
+            classItem.referenceType?.id,
+            id1
+        )
+        XCTAssertEqual(
+            classItem.referenceType?.id,
+            id1
+        )
+        XCTAssertEqual(
+            classItem.referenceType?.id,
+            id1
+        )
 
         let id2 = UUID()
         classItem.referenceType = .init(id: id2)
         XCTAssertEqual(
             classItem.referenceType?.id,
             id2
+        )
+
+        removeAssociatedObjects(classItem)
+        XCTAssertNil(
+            classItem.referenceType
         )
 
         classItem.referenceType = nil

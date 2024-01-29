@@ -3,29 +3,36 @@ import ObjectAssociationRuntime
 #endif
 
 
+@inline(__always)
 public func getAssociatedObject(
     _ object: AnyObject,
     _ key: UnsafeRawPointer
 ) -> Any? {
-    _ = _initAssociations
-    let ref = swift_getAssociatedObject(object, key) as? Ref<Any?>
-    return ref?.value
+    autoreleasepoolIfAvailable { () -> Any? in
+        _ = _initAssociations
+        guard let ptr = swift_getAssociatedObject(object, key) else { return nil }
+        let unmanaged = Unmanaged<Ref<Any?>>.fromOpaque(ptr)
+        return unmanaged.takeUnretainedValue().value
+    }
 }
 
+@inline(__always)
 public func setAssociatedObject(
     _ object: AnyObject,
     _ key: UnsafeRawPointer,
-    _ value: Any?
+    _ value: Any?,
+    _ policy: swift_AssociationPolicy = .SWIFT_ASSOCIATION_RETAIN_NONATOMIC
 ) {
     _ = _initAssociations
     swift_setAssociatedObject(
         object,
         key,
         Ref(value),
-        Policy.SWIFT_ASSOCIATION_RETAIN_NONATOMIC.rawValue
+        policy.rawValue
     )
 }
 
+@inline(__always)
 public func removeAssociatedObjects(_ object: AnyObject) {
     _ = _initAssociations
     swift_removeAssociatedObjects(object)

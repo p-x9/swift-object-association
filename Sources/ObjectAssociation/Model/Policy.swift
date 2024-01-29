@@ -9,7 +9,7 @@
 import Foundation
 
 // objc_AssociationPolicy
-enum Policy: UInt {
+public enum swift_AssociationPolicy: UInt {
     case SWIFT_ASSOCIATION_ASSIGN = 0
     case SWIFT_ASSOCIATION_RETAIN_NONATOMIC = 1
     //    case SWIFT_ASSOCIATION_COPY_NONATOMIC = 3

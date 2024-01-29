@@ -26,4 +26,4 @@ public func swift_setAssociatedObject(
 public func swift_getAssociatedObject(
     _ object: AnyObject,
     _ key: UnsafeRawPointer
-) -> AnyObject?
+) -> UnsafeRawPointer?
