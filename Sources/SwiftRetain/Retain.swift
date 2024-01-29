@@ -8,6 +8,7 @@
 
 import Foundation
 
+@inline(__always)
 @_cdecl("swift_associated_object_retain")
 public func swift_associated_object_retain(
     _ ptr: UnsafeRawPointer?
@@ -17,6 +18,7 @@ public func swift_associated_object_retain(
     }
 }
 
+@inline(__always)
 @_cdecl("swift_associated_object_release")
 public func swift_associated_object_release(
     _ ptr: UnsafeRawPointer?
@@ -26,6 +28,7 @@ public func swift_associated_object_release(
     }
 }
 
+@inline(__always)
 @_cdecl("swift_associated_object_autorelease")
 public func swift_associated_object_autorelease(
     _ ptr: UnsafeRawPointer?
@@ -37,6 +40,7 @@ public func swift_associated_object_autorelease(
     }
 }
 
+@inline(__always)
 private func swift_reference_handle(
     _ ptr: UnsafeRawPointer?,
     source: String = #function,
