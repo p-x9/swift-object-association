@@ -29,7 +29,8 @@ class ClassItem {
             setAssociatedObject(
                 self,
                 &ClassItem.Keys.valueType,
-                newValue
+                newValue,
+                .SWIFT_ASSOCIATION_ASSIGN
             )
         }
     }
