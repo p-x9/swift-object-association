@@ -189,6 +189,7 @@ _object_set_associative_reference(void *object, const void *key, void *value, ui
                 auto &refs = refs_it->second;
                 auto it = refs.find(key);
                 if (it != refs.end()) {
+                    it->second.releaseHeldValue();
                     association.swap(it->second);
                     refs.erase(it);
                     if (refs.size() == 0) {
