@@ -133,7 +133,7 @@ _object_get_associative_reference(void *object, const void *key)
             ObjectAssociationMap::iterator j = refs.find(key);
             if (j != refs.end()) {
                 association = j->second;
-                /* Retain for map */
+                /* Retain for local property named `association` */
                 association.retainHeldValue();
                 association.retainReturnedValue();
             }
@@ -189,6 +189,7 @@ _object_set_associative_reference(void *object, const void *key, void *value, ui
                 auto &refs = refs_it->second;
                 auto it = refs.find(key);
                 if (it != refs.end()) {
+                    /* [2] Release the amount retained in [1]. */
                     it->second.releaseHeldValue();
                     association.swap(it->second);
                     refs.erase(it);
