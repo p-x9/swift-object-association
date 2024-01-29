@@ -36,6 +36,8 @@ public func swift_associated_object_autorelease(
     swift_reference_handle(ptr) {
 #if canImport(ObjectiveC)
         _ = Unmanaged<AnyObject>.fromOpaque($0).autorelease()
+#else
+        Unmanaged<AnyObject>.fromOpaque($0).release()
 #endif
     }
 }

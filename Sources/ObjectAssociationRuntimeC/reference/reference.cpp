@@ -64,12 +64,6 @@ public:
         }
     }
 
-    inline void retainHeldValue() {
-        if (_value && (_policy & SWIFT_ASSOCIATION_SETTER_RETAIN)) {
-            swift_associated_object_retain(_value);
-        }
-    }
-
     inline void retainReturnedValue() {
         if (_value && (_policy & SWIFT_ASSOCIATION_GETTER_RETAIN)) {
             swift_associated_object_retain(_value);
@@ -133,8 +127,6 @@ _object_get_associative_reference(void *object, const void *key)
             ObjectAssociationMap::iterator j = refs.find(key);
             if (j != refs.end()) {
                 association = j->second;
-                /* Retain for local property named `association` */
-                association.retainHeldValue();
                 association.retainReturnedValue();
             }
         }
@@ -160,9 +152,6 @@ _object_set_associative_reference(void *object, const void *key, void *value, ui
     // retain the new value (if any) outside the lock.
     association.acquireValue();
 
-    /* [1] The original implementation also retains on the map */
-    association.acquireValue();
-
     bool isFirstAssociation = false;
     {
         AssociationsManager manager;
@@ -179,8 +168,6 @@ _object_set_associative_reference(void *object, const void *key, void *value, ui
             auto &refs = refs_result.first->second;
             auto result = refs.try_emplace(key, std::move(association));
             if (!result.second) {
-                /* [2] Release the amount retained in [1]. */
-                result.first->second.releaseHeldValue();
                 association.swap(result.first->second);
             }
         } else {
@@ -189,8 +176,6 @@ _object_set_associative_reference(void *object, const void *key, void *value, ui
                 auto &refs = refs_it->second;
                 auto it = refs.find(key);
                 if (it != refs.end()) {
-                    /* [2] Release the amount retained in [1]. */
-                    it->second.releaseHeldValue();
                     association.swap(it->second);
                     refs.erase(it);
                     if (refs.size() == 0) {
