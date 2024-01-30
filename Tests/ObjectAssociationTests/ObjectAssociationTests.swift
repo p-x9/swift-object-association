@@ -16,6 +16,8 @@ final class ObjectAssociationTests: XCTestCase {
             classItem.valueType
         )
 
+        // short string
+        // `NSTaggedPointerString` (macOS)
         classItem.valueType = "hello"
         XCTAssertEqual(
             classItem.valueType,
@@ -38,10 +40,12 @@ final class ObjectAssociationTests: XCTestCase {
             "hello"
         )
 
-        classItem.valueType = "modified"
+        // long string
+        // `__NSCFString` (macOS)
+        classItem.valueType = "modified hello"
         XCTAssertEqual(
             classItem.valueType,
-            "modified"
+            "modified hello"
         )
 
         classItem.valueType = nil

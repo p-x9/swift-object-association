@@ -11,8 +11,11 @@ public func getAssociatedObject(
     autoreleasepoolIfAvailable { () -> Any? in
         _ = _initAssociations
         guard let ptr = swift_getAssociatedObject(object, key) else { return nil }
-        let unmanaged = Unmanaged<Ref<Any?>>.fromOpaque(ptr)
-        return unmanaged.takeUnretainedValue().value
+        let unmanaged = Unmanaged<AnyObject>.fromOpaque(ptr)
+        let value = unmanaged.takeUnretainedValue()
+
+        if let ref = value as? Ref<Any> { return ref.value }
+        return value
     }
 }
 
@@ -24,10 +27,20 @@ public func setAssociatedObject(
     _ policy: swift_AssociationPolicy = .SWIFT_ASSOCIATION_RETAIN_NONATOMIC
 ) {
     _ = _initAssociations
+
+    var valueToSet: AnyObject?
+    if let value {
+        if policy == .SWIFT_ASSOCIATION_ASSIGN {
+            valueToSet = value as AnyObject
+        } else {
+            valueToSet = Ref(value)
+        }
+    }
+
     swift_setAssociatedObject(
         object,
         key,
-        Ref(value),
+        valueToSet,
         policy.rawValue
     )
 }
