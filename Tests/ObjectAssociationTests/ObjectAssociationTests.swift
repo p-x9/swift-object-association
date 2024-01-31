@@ -99,5 +99,55 @@ final class ObjectAssociationTests: XCTestCase {
             classItem.referenceType
         )
     }
+
+    func testWeakReferenceType() {
+        XCTAssertNil(
+            classItem.weakReferenceType
+        )
+
+        let id1 = UUID()
+        let item1: ClassItem? = .init(id: id1)
+
+        classItem.weakReferenceType = item1
+        XCTAssertEqual(
+            classItem.weakReferenceType?.id,
+            id1
+        )
+        XCTAssertEqual(
+            classItem.weakReferenceType?.id,
+            id1
+        )
+        XCTAssertEqual(
+            classItem.weakReferenceType?.id,
+            id1
+        )
+        XCTAssertEqual(
+            classItem.weakReferenceType?.id,
+            id1
+        )
+        XCTAssertEqual(
+            classItem.weakReferenceType?.id,
+            id1
+        )
+
+        let id2 = UUID()
+        var item2: ClassItem?  = .init(id: id2)
+
+        classItem.weakReferenceType = item2
+        XCTAssertEqual(
+            classItem.weakReferenceType?.id,
+            id2
+        )
+        XCTAssertEqual(
+            item1?.id,
+            id1
+        )
+
+
+        item2 = nil
+        XCTAssertNil(
+            classItem.weakReferenceType
+        )
+    }
 }
 
