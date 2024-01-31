@@ -14,6 +14,7 @@ class ClassItem {
     enum Keys {
         static var valueType: UInt8 = 0
         static var referenceType: UInt8 = 0
+        static var weakReferenceType: UInt8 = 0
     }
 
     let id: UUID
@@ -46,6 +47,23 @@ class ClassItem {
                 self,
                 &ClassItem.Keys.referenceType,
                 newValue
+            )
+        }
+    }
+
+    var weakReferenceType: ClassItem? {
+        get {
+            getAssociatedObject(
+                self,
+                &ClassItem.Keys.weakReferenceType
+            ) as? ClassItem
+        }
+        set {
+            setAssociatedObject(
+                self,
+                &ClassItem.Keys.weakReferenceType,
+                newValue,
+                .SWIFT_ASSOCIATION_WEAK
             )
         }
     }
