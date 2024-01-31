@@ -21,3 +21,18 @@ class Ref<T> {
 #endif
     }
 }
+
+
+class WeakRef<T: AnyObject> {
+    weak var value: T?
+
+    init(_ value: T) {
+        self.value = value
+    }
+
+    deinit {
+#if false
+        print("deinit:", value)
+#endif
+    }
+}

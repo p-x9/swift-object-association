@@ -15,6 +15,7 @@ public func getAssociatedObject(
         let value = unmanaged.takeUnretainedValue()
 
         if let ref = value as? Ref<Any> { return ref.value }
+        else if let ref = value as? WeakRef<AnyObject> { return ref.value }
         return value
     }
 }
@@ -29,9 +30,13 @@ public func setAssociatedObject(
     _ = _initAssociations
 
     var valueToSet: AnyObject?
+    var policy = policy
     if let value {
         if policy == .SWIFT_ASSOCIATION_ASSIGN {
             valueToSet = value as AnyObject
+        } else if policy == .SWIFT_ASSOCIATION_WEAK {
+            valueToSet = WeakRef(value as AnyObject)
+            policy = .SWIFT_ASSOCIATION_RETAIN_NONATOMIC
         } else {
             valueToSet = Ref(value)
         }
